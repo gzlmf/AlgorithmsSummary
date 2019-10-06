@@ -216,3 +216,42 @@ class Sorter():
             merge.append(part2[j])
             j += 1
         return merge
+    
+    #基数排序
+    def radixSort(self, arr,descend=False):
+        '''
+        This algorithm is radix sort algorithm（LSD）
+        Input:
+        arr: the input array
+        descend: the order of sorting, True for descend while False for ascend, default is ascend.
+        Output:
+        arr: the sorted array
+        这个算法核心在于多次将数字分类到代表不同数字的桶里面。从个位一直比较到最高位。这个算法的的时间复杂度是O(d(r+n)),其中,d是最大数的位数，r是基数（每一位数的范围，这里是0到9），
+        n是要排序的数的个数。
+        '''
+        flag = True
+        divend = 1
+        if descend == True:
+            numP = [9,-1,-1]
+        else:
+            numP = [0,10,1]
+        while(flag):
+            newArr = []
+            count = [0,0,0,0,0,0,0,0,0,0]
+            storeDict = {}
+            for i in range(10):
+                storeDict[i] = []
+            for i in arr:
+                base = i//divend%10
+                count[base] += 1
+                storeDict[base].append(i)
+            for i in range(numP[0],numP[1],numP[2]):
+                if count[i] > 0:
+                    for j in storeDict[i]:
+                        newArr.append(j)
+            arr = newArr.copy()
+            divend *= 10
+            if count[0] == len(arr):
+                flag = False
+        return arr
+
