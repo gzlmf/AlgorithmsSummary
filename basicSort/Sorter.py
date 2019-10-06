@@ -126,3 +126,93 @@ class Sorter():
             arrLen -= 1
             self._adjustHeap(arr,0,sign)
         return arr
+    
+    #冒泡排序
+    def bubbleSort(self, arr, descend=False):
+        if descend == True:
+            sign = -1
+        else:
+            sign = 1
+        arrLen = len(arr)
+        for i in range(0,arrLen-1):
+            for j in range(0,arrLen-i-1):
+                if sign * (arr[j] - arr[j+1]) > 0:
+                    tmp = arr[j]
+                    arr[j] = arr[j+1]
+                    arr[j+1] = tmp
+        return arr
+    
+    #快速排序
+    def quickSort(self,arr,start,end,descend=False):
+        '''
+        This is quick sort algorithm
+        Input:
+        arr: the input array
+        start: the start position
+        end: the end position
+        descend: the order of sorting, True for descend while False for ascend, default is ascend.
+        Output:
+        arr: the sorted array
+        快速排序利用分治的方法，先找到一个基准，然后设立一前一后两个指针。过程中，两个指针向对方靠近并将大于基准数字的数放在右边，小于的数放在左边。
+        最后当两个指针重合时，这个位置就是基准数的位置。最坏情况下是n的平方，其他都是nlog2(n)。
+        '''
+        i = start
+        j = end
+        if descend == True:
+            sign = -1
+        else:
+            sign = 1
+        if i >= j:
+            return None
+        base = arr[start]
+        while(i!=j):
+            while(sign * (arr[j]-base)>0 and i < j):
+                j -= 1
+            tmp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tmp
+            while(sign * (arr[i]-base)<=0 and i < j):
+                i += 1
+            if i < j:
+                tmp = arr[j]
+                arr[j] = arr[i]
+                arr[i] = tmp
+        arr[i] = base
+        self.quickSort(arr,start,i-1,descend)
+        self.quickSort(arr,i+1,end,descend)
+        return arr
+    
+    #归并排序
+    def mergeSort(self, arr,start,end,descend=False):
+        '''
+        This algorithm is merge sort algorithm
+        Input:
+        arr: the input array
+        start: the start position of slide
+        end: the end position of slide
+        descend: the order of sorting, True for descend while False for ascend, default is ascend.
+        Output:
+        arr: the sorted array
+        归并排序是分治法的极致，先将数组分割到最小单元（一组一个数字）然后两两合并成一个有序组（1到2），然后一直合并（2到4，4到8。。。）。 
+        主要利用递归来进行。时间复杂度是nlog2(n)
+        '''
+        if descend == True:
+            sign = -1
+        else:
+            sign = 1
+        if start == end:
+            return [arr[start]]
+        medium = int((start+end)/2)
+        part1 = self.mergeSort(arr,start, medium , descend)
+        part2 = self.mergeSort(arr, medium + 1, end ,descend)
+        merge = []
+        j = 0
+        for i in part1:
+            while(j < len(part2) and sign * (part2[j] - i) < 0):
+                merge.append(part2[j])
+                j += 1
+            merge.append(i)
+        while(j<len(part2)):
+            merge.append(part2[j])
+            j += 1
+        return merge
